@@ -13,6 +13,8 @@ export default [
   {
     // 关闭对本 CLI 项目审查无实际收益的纯风格/主观偏好规则
     rules: {
+      // 对象属性名需匹配外部 API 契约(AutoDL 接口为 snake_case), 豁免属性名的驼峰检查
+      'camelcase': ['error', {properties: 'never'}],
       // 代码风格排版/注释格式：不影响正确性
       '@stylistic/lines-between-class-members': 'off',
       '@stylistic/padding-line-between-statements': 'off',

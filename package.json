@@ -79,12 +79,18 @@
     "topics": {
       "hello": {
         "description": "Say hello to the world and others"
+      },
+      "instance": {
+        "description": "AutoDL 容器实例管理 (创建/开关机/释放等)"
+      },
+      "image": {
+        "description": "AutoDL 私有镜像管理"
       }
     }
   },
   "repository": "lipanpan-hub/autodlx",
   "scripts": {
-    "build": "shx rm -rf dist && tsc -b",
+    "build": "shx rm -rf dist tsconfig.tsbuildinfo && tsc -b",
     "lint": "eslint",
     "start": "node ./bin/run.js",
     "pack:tarballs": "oclif pack tarballs",
