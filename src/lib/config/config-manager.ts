@@ -116,6 +116,20 @@ export abstract class ConfigManager<TProfile extends NamedProfile> {
     if (setCurrent) config.current = profile.name
     this.writeConfig(config)
   }
+
+  /**
+   * 切换当前激活档案为指定名称的档案。
+   *
+   * @param name - 目标档案名
+   * @returns 切换成功返回 `true`; 若无配置或未找到该档案则返回 `false`
+   */
+  switchProfile(name: string): boolean {
+    const config = this.readConfig()
+    if (!config || !config.profiles.some((profile) => profile.name === name)) return false
+    config.current = name
+    this.writeConfig(config)
+    return true
+  }
   // #endregion
 
   // 模板方法的可变步骤: 由具体项目提供本项目的默认档案(供 ensureConfig 调用)
