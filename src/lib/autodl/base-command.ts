@@ -37,4 +37,16 @@ export abstract class AutodlCommand extends BaseCommand {
       })),
     })
   }
+
+  // 轮询等待异步操作生效: 每隔 intervalMs 执行一次 check, 返回 true 即代表成功; 超过 timeoutMs 仍未成功返回 false
+  protected async pollUntil(check: () => Promise<boolean>, intervalMs: number, timeoutMs: number): Promise<boolean> {
+    const deadline = Date.now() + timeoutMs
+    while (Date.now() < deadline) {
+      await new Promise<void>((resolveSleep) => {
+        setTimeout(resolveSleep, intervalMs)
+      })
+      if (await check()) return true
+    }
+    return false
+  }
 }

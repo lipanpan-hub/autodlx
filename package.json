@@ -77,14 +77,14 @@
     },
     "topicSeparator": " ",
     "topics": {
-      "hello": {
-        "description": "Say hello to the world and others"
-      },
       "instance": {
         "description": "AutoDL 容器实例管理 (创建/开关机/释放等)"
       },
       "image": {
-        "description": "AutoDL 私有镜像管理"
+        "description": "AutoDL 私有镜像管理 (查看私有镜像列表等)"
+      },
+      "config": {
+        "description": "CLI 配置档案管理 (查看/切换/编辑配置文件)"
       }
     }
   },
