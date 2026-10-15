@@ -19,14 +19,25 @@ export class AutodlClient {
 
   // #region 通用请求
 
-  // 发送 POST 请求并解包通用响应, code 非 Success 时抛出带服务端 msg 的错误
-  private async request<T>(path: string, body: Record<string, unknown> = {}): Promise<T> {
+  // 发送请求并解包通用响应, code 非 Success 时抛出带服务端 msg 的错误
+  // GET 请求将参数拼接到 URL 查询串(fetch 不允许 GET 携带 Body), 其余方法将参数作为 JSON Body 发送
+  private async request<T>(
+    path: string,
+    body: Record<string, unknown> = {},
+    method: 'GET' | 'POST' = 'POST',
+  ): Promise<T> {
+    const queryString = new URLSearchParams(
+      Object.entries(body).map(([key, value]) => [key, String(value)]),
+    ).toString()
+    const isGetRequest = method === 'GET'
+    const requestUrl = `${AUTODL_API_HOST}${path}${(isGetRequest && queryString) ? `?${queryString}` : ''}`
+
     let httpResponse: Response
     try {
-      httpResponse = await fetch(`${AUTODL_API_HOST}${path}`, {
-        method: 'POST',
+      httpResponse = await fetch(requestUrl, {
+        method,
         headers: {'Authorization': this.token, 'Content-Type': 'application/json'},
-        body: JSON.stringify(body),
+        body: isGetRequest ? undefined : JSON.stringify(body),
       })
     } catch (error) {
       throw new Error(`AutoDL API 请求失败: ${path}, 原因: ${error instanceof Error ? error.message : String(error)}`)
@@ -61,14 +72,14 @@ export class AutodlClient {
     return this.request<string>('/api/v1/dev/instance/pro/create', {...params})
   }
 
-  // 获取实例详情
+  // 获取实例详情(接口要求 GET 请求)
   async getInstanceSnapshot(instanceUuid: string): Promise<InstanceSnapshot> {
-    return this.request<InstanceSnapshot>('/api/v1/dev/instance/pro/snapshot', {instance_uuid: instanceUuid})
+    return this.request<InstanceSnapshot>('/api/v1/dev/instance/pro/snapshot', {instance_uuid: instanceUuid}, 'GET')
   }
 
-  // 获取实例状态, 如 running / shutdown
+  // 获取实例状态, 如 running / shutdown (接口要求 GET 请求)
   async getInstanceStatus(instanceUuid: string): Promise<string> {
-    return this.request<string>('/api/v1/dev/instance/pro/status', {instance_uuid: instanceUuid})
+    return this.request<string>('/api/v1/dev/instance/pro/status', {instance_uuid: instanceUuid}, 'GET')
   }
 
   // 获取实例列表(分页)

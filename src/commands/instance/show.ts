@@ -6,20 +6,25 @@ export default class AutodlInstanceShow extends AutodlCommand {
   static aliases = ['info', 'inst:info']
   static description = '获取 AutoDL 实例详情(SSH/Jupyter/服务访问地址等)'
 
-  static examples = ['<%= config.bin %> <%= command.id %> pro-76419909953e']
+  static examples = [
+    '<%= config.bin %> <%= command.id %> pro-76419909953e',
+    '<%= config.bin %> <%= command.id %>',
+  ]
 
   static args = {
-    instanceUuid: Args.string({description: '实例ID', required: true}),
+    instanceUuid: Args.string({description: '实例ID (未提供时交互式选择)'}),
   }
 
   public async run(): Promise<void> {
     const {args} = await this.parse(AutodlInstanceShow)
     const client = this.createAutodlClient()
 
-    const snapshot = await client.getInstanceSnapshot(args.instanceUuid)
+    const instanceUuid = await this.resolveInstanceUuid(args.instanceUuid)
+
+    const snapshot = await client.getInstanceSnapshot(instanceUuid)
 
     // #region 基础信息
-    this.log(`实例ID: ${args.instanceUuid}`)
+    this.log(`实例ID: ${instanceUuid}`)
     this.log(`地区: ${snapshot.region_sign}`)
     this.log(`GPU: ${snapshot.snapshot_gpu_alias_name} (${snapshot.chip_corp} / ${snapshot.cpu_arch})`)
     this.log(`按量价格: ${(snapshot.payg_price / 1000).toFixed(3)} 元/小时 (原价 ${(snapshot.origin_pay_price / 1000).toFixed(3)})`)
