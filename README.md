@@ -20,7 +20,7 @@ $ npm install -g @lppx/autodlx
 $ adl COMMAND
 running command...
 $ adl (--version)
-@lppx/autodlx/0.0.0 win32-x64 node-v24.14.1
+@lppx/autodlx/0.0.0 linux-x64 node-v22.23.3
 $ adl --help [COMMAND]
 USAGE
   $ adl COMMAND
@@ -29,61 +29,40 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`adl hello PERSON`](#adl-hello-person)
-* [`adl hello world`](#adl-hello-world)
+* [`adl autocomplete [SHELL]`](#adl-autocomplete-shell)
 * [`adl help [COMMAND]`](#adl-help-command)
-* [`adl plugins`](#adl-plugins)
-* [`adl plugins add PLUGIN`](#adl-plugins-add-plugin)
-* [`adl plugins:inspect PLUGIN...`](#adl-pluginsinspect-plugin)
-* [`adl plugins install PLUGIN`](#adl-plugins-install-plugin)
-* [`adl plugins link PATH`](#adl-plugins-link-path)
-* [`adl plugins remove [PLUGIN]`](#adl-plugins-remove-plugin)
-* [`adl plugins reset`](#adl-plugins-reset)
-* [`adl plugins uninstall [PLUGIN]`](#adl-plugins-uninstall-plugin)
-* [`adl plugins unlink [PLUGIN]`](#adl-plugins-unlink-plugin)
-* [`adl plugins update`](#adl-plugins-update)
+* [`adl version`](#adl-version)
 
-## `adl hello PERSON`
+## `adl autocomplete [SHELL]`
 
-Say hello
+Display autocomplete installation instructions.
 
 ```
 USAGE
-  $ adl hello PERSON -f <value>
+  $ adl autocomplete [SHELL] [-r]
 
 ARGUMENTS
-  PERSON  Person to say hello to
+  [SHELL]  (zsh|bash|powershell) Shell type
 
 FLAGS
-  -f, --from=<value>  (required) Who is saying hello
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
 
 DESCRIPTION
-  Say hello
+  Display autocomplete installation instructions.
 
 EXAMPLES
-  $ adl hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
+  $ adl autocomplete
+
+  $ adl autocomplete bash
+
+  $ adl autocomplete zsh
+
+  $ adl autocomplete powershell
+
+  $ adl autocomplete --refresh-cache
 ```
 
-_See code: [src/commands/hello/index.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/hello/index.ts)_
-
-## `adl hello world`
-
-Say hello world
-
-```
-USAGE
-  $ adl hello world
-
-DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ adl hello world
-  hello world! (./src/commands/hello/world.ts)
-```
-
-_See code: [src/commands/hello/world.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/hello/world.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v4.0.4/src/commands/autocomplete/index.ts)_
 
 ## `adl help [COMMAND]`
 
@@ -105,293 +84,23 @@ DESCRIPTION
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/6.3.0/src/commands/help.ts)_
 
-## `adl plugins`
-
-List installed plugins.
+## `adl version`
 
 ```
 USAGE
-  $ adl plugins [--json] [--core]
+  $ adl version [--json] [--verbose]
 
 FLAGS
-  --core  Show core plugins.
+  --verbose  Show additional information about the CLI.
 
 GLOBAL FLAGS
   --json  Format output as json.
 
-DESCRIPTION
-  List installed plugins.
+FLAG DESCRIPTIONS
+  --verbose  Show additional information about the CLI.
 
-EXAMPLES
-  $ adl plugins
+    Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.5.2/src/commands/plugins/index.ts)_
-
-## `adl plugins add PLUGIN`
-
-Installs a plugin into adl.
-
-```
-USAGE
-  $ adl plugins add PLUGIN... [--json] [-f] [-h] [-s | -v]
-
-ARGUMENTS
-  PLUGIN...  Plugin to install.
-
-FLAGS
-  -f, --force    Force npm to fetch remote resources even if a local copy exists on disk.
-  -h, --help     Show CLI help.
-  -s, --silent   Silences npm output.
-  -v, --verbose  Show verbose npm output.
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  Installs a plugin into adl.
-
-  Uses npm to install plugins.
-
-  Installation of a user-installed plugin will override a core plugin.
-
-  Use the ADL_NPM_LOG_LEVEL environment variable to set the npm loglevel.
-  Use the ADL_NPM_REGISTRY environment variable to set the npm registry.
-
-ALIASES
-  $ adl plugins add
-
-EXAMPLES
-  Install a plugin from npm registry.
-
-    $ adl plugins add myplugin
-
-  Install a plugin from a github url.
-
-    $ adl plugins add https://github.com/someuser/someplugin
-
-  Install a plugin from a github slug.
-
-    $ adl plugins add someuser/someplugin
-```
-
-## `adl plugins:inspect PLUGIN...`
-
-Displays installation properties of a plugin.
-
-```
-USAGE
-  $ adl plugins inspect PLUGIN...
-
-ARGUMENTS
-  PLUGIN...  [default: .] Plugin to inspect.
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  Displays installation properties of a plugin.
-
-EXAMPLES
-  $ adl plugins inspect myplugin
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.5.2/src/commands/plugins/inspect.ts)_
-
-## `adl plugins install PLUGIN`
-
-Installs a plugin into adl.
-
-```
-USAGE
-  $ adl plugins install PLUGIN... [--json] [-f] [-h] [-s | -v]
-
-ARGUMENTS
-  PLUGIN...  Plugin to install.
-
-FLAGS
-  -f, --force    Force npm to fetch remote resources even if a local copy exists on disk.
-  -h, --help     Show CLI help.
-  -s, --silent   Silences npm output.
-  -v, --verbose  Show verbose npm output.
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  Installs a plugin into adl.
-
-  Uses npm to install plugins.
-
-  Installation of a user-installed plugin will override a core plugin.
-
-  Use the ADL_NPM_LOG_LEVEL environment variable to set the npm loglevel.
-  Use the ADL_NPM_REGISTRY environment variable to set the npm registry.
-
-ALIASES
-  $ adl plugins add
-
-EXAMPLES
-  Install a plugin from npm registry.
-
-    $ adl plugins install myplugin
-
-  Install a plugin from a github url.
-
-    $ adl plugins install https://github.com/someuser/someplugin
-
-  Install a plugin from a github slug.
-
-    $ adl plugins install someuser/someplugin
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.5.2/src/commands/plugins/install.ts)_
-
-## `adl plugins link PATH`
-
-Links a plugin into the CLI for development.
-
-```
-USAGE
-  $ adl plugins link PATH [-h] [--install] [-v]
-
-ARGUMENTS
-  PATH  [default: .] path to plugin
-
-FLAGS
-  -h, --help          Show CLI help.
-  -v, --verbose
-      --[no-]install  Install dependencies after linking the plugin.
-
-DESCRIPTION
-  Links a plugin into the CLI for development.
-
-  Installation of a linked plugin will override a user-installed or core plugin.
-
-  e.g. If you have a user-installed or core plugin that has a 'hello' command, installing a linked plugin with a 'hello'
-  command will override the user-installed or core plugin implementation. This is useful for development work.
-
-
-EXAMPLES
-  $ adl plugins link myplugin
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.5.2/src/commands/plugins/link.ts)_
-
-## `adl plugins remove [PLUGIN]`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ adl plugins remove [PLUGIN...] [-h] [-v]
-
-ARGUMENTS
-  [PLUGIN...]  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ adl plugins unlink
-  $ adl plugins remove
-
-EXAMPLES
-  $ adl plugins remove myplugin
-```
-
-## `adl plugins reset`
-
-Remove all user-installed and linked plugins.
-
-```
-USAGE
-  $ adl plugins reset [--hard] [--reinstall]
-
-FLAGS
-  --hard       Delete node_modules and package manager related files in addition to uninstalling plugins.
-  --reinstall  Reinstall all plugins after uninstalling.
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.5.2/src/commands/plugins/reset.ts)_
-
-## `adl plugins uninstall [PLUGIN]`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ adl plugins uninstall [PLUGIN...] [-h] [-v]
-
-ARGUMENTS
-  [PLUGIN...]  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ adl plugins unlink
-  $ adl plugins remove
-
-EXAMPLES
-  $ adl plugins uninstall myplugin
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.5.2/src/commands/plugins/uninstall.ts)_
-
-## `adl plugins unlink [PLUGIN]`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ adl plugins unlink [PLUGIN...] [-h] [-v]
-
-ARGUMENTS
-  [PLUGIN...]  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ adl plugins unlink
-  $ adl plugins remove
-
-EXAMPLES
-  $ adl plugins unlink myplugin
-```
-
-## `adl plugins update`
-
-Update installed plugins.
-
-```
-USAGE
-  $ adl plugins update [-h] [-v]
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Update installed plugins.
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.5.2/src/commands/plugins/update.ts)_
+_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/3.0.5/src/commands/version.ts)_
 <!-- commandsstop -->
