@@ -85,6 +85,9 @@
       "art": {
         "description": "AutoDL.art ComfyUI API (提交工作流任务/查询进度/下载产物)"
       },
+      "app": {
+        "description": "AutoDL.art 应用实例管理 (创建/开关机/释放等)"
+      },
       "config": {
         "description": "CLI 配置档案管理 (查看/切换/编辑配置文件)"
       }
