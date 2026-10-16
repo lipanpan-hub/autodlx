@@ -30,7 +30,7 @@ export const PRESET_WORKFLOWS: PresetWorkflow[] = [
     description: '基于文本 + 参考音频生成目标语音, 保留说话人音色、支持情绪表达 (https://www.autodl.art/large-model/comfyui/indextts2-v1)',
     params: [
       {name: 'prompt_text', description: '要合成的文本 (1-2048 字)', isRequired: true, example: '"你好，这是一段测试文本"'},
-      {name: 'prompt_simple', description: '参考音频, 支持 URL 或 base64', isRequired: true, example: '"https://example.com/voice.wav"'},
+      {name: 'prompt_simple', description: '参考音频, 支持 URL 或 base64', isRequired: true, example: '"http://lipanpan.oss-cn-shenzhen.aliyuncs.com/voice-preview.wav "'},
       {name: 'emo_control_method', description: '情绪控制方法', isRequired: true, example: '"与音色参考音频相同"'},
       {name: 'emo_happy', description: '情绪强度: 高兴 (0-1.4), 其余情绪为同前缀参数 emo_sad/emo_angry/emo_calm 等', isRequired: false, example: '0.5'},
       {name: 'emo_random', description: '是否随机情绪', isRequired: false, example: 'false'},
