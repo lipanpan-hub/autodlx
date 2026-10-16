@@ -1,13 +1,16 @@
 # autodlx
 
-AutoDL 容器云的命令行管理工具。在终端里完成实例的创建、开关机、释放、保存镜像等日常操作，支持多配置档案切换与交互式参数补全。
+AutoDL 容器云的命令行管理工具。在终端里完成实例的创建、开关机、释放、保存镜像等日常操作，还能调用 AutoDL.art 提交 ComfyUI 工作流任务（文生视频、语音合成等）并自动下载产物，支持多配置档案切换与交互式参数补全。
 
 ## 特性
 
 - **实例全生命周期管理**：创建、开机、关机、释放、状态与详情查询，异步操作轮询确认最终生效
+- **应用实例管理**：管理 AutoDL.art 网页应用（如 ComfyUI）实例的创建、开关机与释放
+- **AI 生成任务**：一条命令提交 ComfyUI 工作流任务，等待完成后自动下载产物（URL 有效期短，避免过期）
+- **预置工作流**：内置常用工作流参数清单（如 indextts2 语音合成、H3 文生视频），缺省参数时逐项交互补全
 - **镜像管理**：查看私有镜像列表，将实例保存为私有镜像
 - **交互式体验**：实例 ID、算力规格、镜像等参数缺省时自动进入交互式选择，支持模糊搜索
-- **多配置档案**：YAML 多档案管理 Token，支持一键切换与内置 TUI / 外部编辑器编辑
+- **多配置档案**：YAML 多档案管理 Token 与 API Key，支持一键切换与内置 TUI / 外部编辑器编辑
 - **别名友好**：常用命令提供短别名（如 `adl ps`、`adl up`、`adl down`）
 
 ## 安装
@@ -57,6 +60,12 @@ adl instance show <instance-id>
 adl instance stop <instance-id>
 ```
 
+7. 提交 AI 生成任务并自动下载产物 (以文生视频为例, 缺省工作流ID时交互选择预置工作流)
+
+```sh
+adl art run minimax_h3_lightx2v_no_pic prompt="一只小猫咪在云端漫步" --out ./outputs
+```
+
 ## 配置
 
 Token 保存在多档案 YAML 配置文件中，执行 `adl config show` 可查看配置文件路径与当前内容：
@@ -66,6 +75,7 @@ current: default
 profiles:
   - name: default
     autodlToken: <your-token>
+    comfyuiApiKey: <your-comfyui-api-key>
   - name: work
     autodlToken: <another-token>
 ```
@@ -77,6 +87,13 @@ adl config switch work
 # 编辑配置文件: 默认内置 TUI 编辑器, --editor 可选择系统外部编辑器
 adl config edit
 adl config edit --editor
+```
+
+AutoDL.art 相关命令使用独立的凭据：实例操作用 `autodlToken`，ComfyUI 工作流任务用 `comfyuiApiKey` (在 AutoDL.art 控制台获取)：
+
+```sh
+# 保存 ComfyUI API Key 到当前配置档案 (省略参数时交互式输入)
+adl art cfset <your-api-key>
 ```
 
 ## 命令速查
@@ -92,6 +109,17 @@ adl config edit --editor
 - `adl instance show [id]` / `adl info` — 实例详情
 - `adl instance save-image <id> <name>` / `adl commit` — 保存为私有镜像
 - `adl image list` / `adl images` — 私有镜像列表
+- `adl art cfset [apiKey]` — 保存 ComfyUI API Key 到当前配置档案
+- `adl art submit [工作流ID key=value...]` — 提交工作流任务, 仅返回任务ID
+- `adl art run [工作流ID key=value...]` — 提交任务并等待完成, `--out` 可自动下载产物
+- `adl art status <taskId>` — 查询任务状态与结果
+- `adl art download <taskId>` — 下载已完成任务的产物 (`--out` 指定目录)
+- `adl app create` / `adl app new` — 创建应用实例 (如 ComfyUI)
+- `adl app start <id>` / `adl app up` — 应用实例开机
+- `adl app stop [id]` / `adl app down` — 应用实例关机
+- `adl app release [id]` / `adl app rm` — 释放应用实例 (未关机时自动先关机)
+- `adl app list` / `adl app ls` — 应用实例列表
+- `adl app show [id]` — 应用实例详情 (访问地址等)
 - `adl config show` / `adl config switch` / `adl config edit` — 配置管理
 
 <!-- usage -->
@@ -108,6 +136,25 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
+* [`adl app create`](#adl-app-create)
+* [`adl app down [INSTANCEUUID]`](#adl-app-down-instanceuuid)
+* [`adl app info [INSTANCEUUID]`](#adl-app-info-instanceuuid)
+* [`adl app list`](#adl-app-list)
+* [`adl app ls`](#adl-app-ls)
+* [`adl app new`](#adl-app-new)
+* [`adl app release [INSTANCEUUID]`](#adl-app-release-instanceuuid)
+* [`adl app rm [INSTANCEUUID]`](#adl-app-rm-instanceuuid)
+* [`adl app show [INSTANCEUUID]`](#adl-app-show-instanceuuid)
+* [`adl app st [INSTANCEUUID]`](#adl-app-st-instanceuuid)
+* [`adl app start INSTANCEUUID`](#adl-app-start-instanceuuid)
+* [`adl app status [INSTANCEUUID]`](#adl-app-status-instanceuuid)
+* [`adl app stop [INSTANCEUUID]`](#adl-app-stop-instanceuuid)
+* [`adl app up INSTANCEUUID`](#adl-app-up-instanceuuid)
+* [`adl art cfset [APIKEY]`](#adl-art-cfset-apikey)
+* [`adl art download TASKID`](#adl-art-download-taskid)
+* [`adl art run [INPUTS]`](#adl-art-run-inputs)
+* [`adl art status TASKID`](#adl-art-status-taskid)
+* [`adl art submit [INPUTS]`](#adl-art-submit-inputs)
 * [`adl autocomplete [SHELL]`](#adl-autocomplete-shell)
 * [`adl bal`](#adl-bal)
 * [`adl balance`](#adl-balance)
@@ -149,6 +196,491 @@ USAGE
 * [`adl st [INSTANCEUUID]`](#adl-st-instanceuuid)
 * [`adl up INSTANCEUUID`](#adl-up-instanceuuid)
 * [`adl version`](#adl-version)
+
+## `adl app create`
+
+创建 AutoDL.art 应用实例 (默认按量计费, 未提供 --gpu-spec/--app 时进入交互式补全)
+
+```
+USAGE
+  $ adl app create [--gpu-spec <value>] [--app <value>] [--version <value>] [--gpu-amount <value>]
+    [--system-disk <value>] [--data-center <value>...] [--name <value>] [--command <value>]
+
+FLAGS
+  --app=<value>             网页应用的UUID, 在网页应用详情页查看, 缺省时交互式输入
+  --command=<value>         开机后执行的命令
+  --data-center=<value>...  [default: ] 候选地区代码, 可多次指定, 如 --data-center westDC3 --data-center beijingDC2,
+                            省略时自动选择
+  --gpu-amount=<value>      [default: 1] GPU数量, 取值 1-4
+  --gpu-spec=<value>        算力规格ID, 如 pro6000-p / 5090-p / v-48g, 缺省时交互式选择
+  --name=<value>            实例备注名
+  --system-disk=<value>     系统盘扩容大小(GB), 取值 0-500
+  --version=<value>         [default: latest] 应用版本, latest 表示自动使用最新版本
+
+DESCRIPTION
+  创建 AutoDL.art 应用实例 (默认按量计费, 未提供 --gpu-spec/--app 时进入交互式补全)
+
+ALIASES
+  $ adl app new
+
+EXAMPLES
+  $ adl app create --gpu-spec pro6000-p --app J1c7lsvbq5
+
+  $ adl app create --gpu-spec 5090-p --app J1c7lsvbq5 --version v2 --gpu-amount 2 --name ComfyUI机
+
+  $ adl app create # 缺少必填参数时交互式选择算力规格并输入应用UUID
+```
+
+_See code: [src/commands/app/create.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/create.ts)_
+
+## `adl app down [INSTANCEUUID]`
+
+关机 AutoDL.art 应用实例 (轮询确认关机成功后才返回)
+
+```
+USAGE
+  $ adl app down [INSTANCEUUID]
+
+ARGUMENTS
+  [INSTANCEUUID]  实例ID (未提供时交互式选择)
+
+DESCRIPTION
+  关机 AutoDL.art 应用实例 (轮询确认关机成功后才返回)
+
+ALIASES
+  $ adl app down
+
+EXAMPLES
+  $ adl app down pro-76419909953e
+```
+
+## `adl app info [INSTANCEUUID]`
+
+获取 AutoDL.art 应用实例详情(SSH/Jupyter/服务访问地址等)
+
+```
+USAGE
+  $ adl app info [INSTANCEUUID]
+
+ARGUMENTS
+  [INSTANCEUUID]  实例ID (未提供时交互式选择)
+
+DESCRIPTION
+  获取 AutoDL.art 应用实例详情(SSH/Jupyter/服务访问地址等)
+
+ALIASES
+  $ adl app info
+
+EXAMPLES
+  $ adl app info pro-76419909953e
+
+  $ adl app info
+```
+
+## `adl app list`
+
+获取 AutoDL.art 应用实例列表
+
+```
+USAGE
+  $ adl app list [--page <value>] [--size <value>]
+
+FLAGS
+  --page=<value>  [default: 1] 页码, 从 1 开始
+  --size=<value>  [default: 10] 每页数量
+
+DESCRIPTION
+  获取 AutoDL.art 应用实例列表
+
+ALIASES
+  $ adl app ls
+
+EXAMPLES
+  $ adl app list --page 1 --size 20
+```
+
+_See code: [src/commands/app/list.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/list.ts)_
+
+## `adl app ls`
+
+获取 AutoDL.art 应用实例列表
+
+```
+USAGE
+  $ adl app ls [--page <value>] [--size <value>]
+
+FLAGS
+  --page=<value>  [default: 1] 页码, 从 1 开始
+  --size=<value>  [default: 10] 每页数量
+
+DESCRIPTION
+  获取 AutoDL.art 应用实例列表
+
+ALIASES
+  $ adl app ls
+
+EXAMPLES
+  $ adl app ls --page 1 --size 20
+```
+
+## `adl app new`
+
+创建 AutoDL.art 应用实例 (默认按量计费, 未提供 --gpu-spec/--app 时进入交互式补全)
+
+```
+USAGE
+  $ adl app new [--gpu-spec <value>] [--app <value>] [--version <value>] [--gpu-amount <value>]
+    [--system-disk <value>] [--data-center <value>...] [--name <value>] [--command <value>]
+
+FLAGS
+  --app=<value>             网页应用的UUID, 在网页应用详情页查看, 缺省时交互式输入
+  --command=<value>         开机后执行的命令
+  --data-center=<value>...  [default: ] 候选地区代码, 可多次指定, 如 --data-center westDC3 --data-center beijingDC2,
+                            省略时自动选择
+  --gpu-amount=<value>      [default: 1] GPU数量, 取值 1-4
+  --gpu-spec=<value>        算力规格ID, 如 pro6000-p / 5090-p / v-48g, 缺省时交互式选择
+  --name=<value>            实例备注名
+  --system-disk=<value>     系统盘扩容大小(GB), 取值 0-500
+  --version=<value>         [default: latest] 应用版本, latest 表示自动使用最新版本
+
+DESCRIPTION
+  创建 AutoDL.art 应用实例 (默认按量计费, 未提供 --gpu-spec/--app 时进入交互式补全)
+
+ALIASES
+  $ adl app new
+
+EXAMPLES
+  $ adl app new --gpu-spec pro6000-p --app J1c7lsvbq5
+
+  $ adl app new --gpu-spec 5090-p --app J1c7lsvbq5 --version v2 --gpu-amount 2 --name ComfyUI机
+
+  $ adl app new # 缺少必填参数时交互式选择算力规格并输入应用UUID
+```
+
+## `adl app release [INSTANCEUUID]`
+
+释放 AutoDL.art 应用实例 (不可恢复, 未关机时自动先关机再释放)
+
+```
+USAGE
+  $ adl app release [INSTANCEUUID] [--force]
+
+ARGUMENTS
+  [INSTANCEUUID]  实例ID (未提供时交互式选择)
+
+FLAGS
+  --force  跳过确认直接释放
+
+DESCRIPTION
+  释放 AutoDL.art 应用实例 (不可恢复, 未关机时自动先关机再释放)
+
+ALIASES
+  $ adl app rm
+
+EXAMPLES
+  $ adl app release pro-76419909953e
+
+  $ adl app release pro-76419909953e --force
+```
+
+_See code: [src/commands/app/release.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/release.ts)_
+
+## `adl app rm [INSTANCEUUID]`
+
+释放 AutoDL.art 应用实例 (不可恢复, 未关机时自动先关机再释放)
+
+```
+USAGE
+  $ adl app rm [INSTANCEUUID] [--force]
+
+ARGUMENTS
+  [INSTANCEUUID]  实例ID (未提供时交互式选择)
+
+FLAGS
+  --force  跳过确认直接释放
+
+DESCRIPTION
+  释放 AutoDL.art 应用实例 (不可恢复, 未关机时自动先关机再释放)
+
+ALIASES
+  $ adl app rm
+
+EXAMPLES
+  $ adl app rm pro-76419909953e
+
+  $ adl app rm pro-76419909953e --force
+```
+
+## `adl app show [INSTANCEUUID]`
+
+获取 AutoDL.art 应用实例详情(SSH/Jupyter/服务访问地址等)
+
+```
+USAGE
+  $ adl app show [INSTANCEUUID]
+
+ARGUMENTS
+  [INSTANCEUUID]  实例ID (未提供时交互式选择)
+
+DESCRIPTION
+  获取 AutoDL.art 应用实例详情(SSH/Jupyter/服务访问地址等)
+
+ALIASES
+  $ adl app info
+
+EXAMPLES
+  $ adl app show pro-76419909953e
+
+  $ adl app show
+```
+
+_See code: [src/commands/app/show.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/show.ts)_
+
+## `adl app st [INSTANCEUUID]`
+
+获取 AutoDL.art 应用实例状态 (如 running / shutdown)
+
+```
+USAGE
+  $ adl app st [INSTANCEUUID]
+
+ARGUMENTS
+  [INSTANCEUUID]  实例ID (未提供时交互式选择)
+
+DESCRIPTION
+  获取 AutoDL.art 应用实例状态 (如 running / shutdown)
+
+ALIASES
+  $ adl app st
+
+EXAMPLES
+  $ adl app st pro-76419909953e
+
+  $ adl app st
+```
+
+## `adl app start INSTANCEUUID`
+
+开机 AutoDL.art 应用实例 (有卡模式)
+
+```
+USAGE
+  $ adl app start INSTANCEUUID [--command <value>]
+
+ARGUMENTS
+  INSTANCEUUID  实例ID
+
+FLAGS
+  --command=<value>  开机后执行的命令, 会覆盖创建时设置的命令
+
+DESCRIPTION
+  开机 AutoDL.art 应用实例 (有卡模式)
+
+ALIASES
+  $ adl app up
+
+EXAMPLES
+  $ adl app start pro-76419909953e
+
+  $ adl app start pro-76419909953e --command "sleep 1"
+```
+
+_See code: [src/commands/app/start.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/start.ts)_
+
+## `adl app status [INSTANCEUUID]`
+
+获取 AutoDL.art 应用实例状态 (如 running / shutdown)
+
+```
+USAGE
+  $ adl app status [INSTANCEUUID]
+
+ARGUMENTS
+  [INSTANCEUUID]  实例ID (未提供时交互式选择)
+
+DESCRIPTION
+  获取 AutoDL.art 应用实例状态 (如 running / shutdown)
+
+ALIASES
+  $ adl app st
+
+EXAMPLES
+  $ adl app status pro-76419909953e
+
+  $ adl app status
+```
+
+_See code: [src/commands/app/status.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/status.ts)_
+
+## `adl app stop [INSTANCEUUID]`
+
+关机 AutoDL.art 应用实例 (轮询确认关机成功后才返回)
+
+```
+USAGE
+  $ adl app stop [INSTANCEUUID]
+
+ARGUMENTS
+  [INSTANCEUUID]  实例ID (未提供时交互式选择)
+
+DESCRIPTION
+  关机 AutoDL.art 应用实例 (轮询确认关机成功后才返回)
+
+ALIASES
+  $ adl app down
+
+EXAMPLES
+  $ adl app stop pro-76419909953e
+```
+
+_See code: [src/commands/app/stop.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/stop.ts)_
+
+## `adl app up INSTANCEUUID`
+
+开机 AutoDL.art 应用实例 (有卡模式)
+
+```
+USAGE
+  $ adl app up INSTANCEUUID [--command <value>]
+
+ARGUMENTS
+  INSTANCEUUID  实例ID
+
+FLAGS
+  --command=<value>  开机后执行的命令, 会覆盖创建时设置的命令
+
+DESCRIPTION
+  开机 AutoDL.art 应用实例 (有卡模式)
+
+ALIASES
+  $ adl app up
+
+EXAMPLES
+  $ adl app up pro-76419909953e
+
+  $ adl app up pro-76419909953e --command "sleep 1"
+```
+
+## `adl art cfset [APIKEY]`
+
+保存 AutoDL.art 的 ComfyUI API Key 到当前配置档案
+
+```
+USAGE
+  $ adl art cfset [APIKEY]
+
+ARGUMENTS
+  [APIKEY]  ComfyUI API Key, 省略时进入交互式输入(隐藏回显)
+
+DESCRIPTION
+  保存 AutoDL.art 的 ComfyUI API Key 到当前配置档案
+
+EXAMPLES
+  $ adl art cfset your-api-key
+
+  $ adl art cfset
+```
+
+_See code: [src/commands/art/cfset.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/art/cfset.ts)_
+
+## `adl art download TASKID`
+
+下载已完成的 AutoDL.art ComfyUI 任务产物 (产物 URL 有效期短, 请尽快保存)
+
+```
+USAGE
+  $ adl art download TASKID [-o <value>]
+
+ARGUMENTS
+  TASKID  任务ID (提交任务时返回)
+
+FLAGS
+  -o, --out=<value>  [default: .] 下载目录
+
+DESCRIPTION
+  下载已完成的 AutoDL.art ComfyUI 任务产物 (产物 URL 有效期短, 请尽快保存)
+
+EXAMPLES
+  $ adl art download 2a25da1d-39ad-495c-8dac-bae8e8f6b1a1
+
+  $ adl art download <task_id> --out ./outputs
+```
+
+_See code: [src/commands/art/download.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/art/download.ts)_
+
+## `adl art run [INPUTS]`
+
+提交 AutoDL.art ComfyUI 工作流任务并等待完成 (可自动下载产物)
+
+```
+USAGE
+  $ adl art run [INPUTS...] [-f <value>] [-o <value>] [--timeout <value>]
+
+ARGUMENTS
+  [INPUTS...]  工作流ID 与 key=value 参数 (首个不含 = 的 token 为工作流ID, 省略时交互选择预置工作流)
+
+FLAGS
+  -f, --file=<value>     从 JSON 文件加载工作流参数 (命令行参数将覆盖同名键)
+  -o, --out=<value>      任务成功后下载产物到指定目录
+      --timeout=<value>  [default: 600] 等待任务完成的超时秒数
+
+DESCRIPTION
+  提交 AutoDL.art ComfyUI 工作流任务并等待完成 (可自动下载产物)
+
+EXAMPLES
+  $ adl art run minimax_h3_lightx2v_no_pic prompt="一只小猫咪在云端漫步" duration=1 resolution="480p竖"
+
+  $ adl art run indextts2-v1 prompt_text="你好" prompt_simple="https://example.com/voice.wav"
+
+  $ adl art run --file params.json --out ./outputs
+```
+
+_See code: [src/commands/art/run.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/art/run.ts)_
+
+## `adl art status TASKID`
+
+查询 AutoDL.art ComfyUI 任务状态与结果
+
+```
+USAGE
+  $ adl art status TASKID
+
+ARGUMENTS
+  TASKID  任务ID (提交任务时返回)
+
+DESCRIPTION
+  查询 AutoDL.art ComfyUI 任务状态与结果
+
+EXAMPLES
+  $ adl art status 2a25da1d-39ad-495c-8dac-bae8e8f6b1a1
+```
+
+_See code: [src/commands/art/status.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/art/status.ts)_
+
+## `adl art submit [INPUTS]`
+
+提交 AutoDL.art ComfyUI 工作流任务 (仅返回任务ID, 不等待完成)
+
+```
+USAGE
+  $ adl art submit [INPUTS...] [-f <value>]
+
+ARGUMENTS
+  [INPUTS...]  工作流ID 与 key=value 参数 (首个不含 = 的 token 为工作流ID, 省略时交互选择预置工作流)
+
+FLAGS
+  -f, --file=<value>  从 JSON 文件加载工作流参数 (命令行参数将覆盖同名键)
+
+DESCRIPTION
+  提交 AutoDL.art ComfyUI 工作流任务 (仅返回任务ID, 不等待完成)
+
+EXAMPLES
+  $ adl art submit minimax_h3_lightx2v_no_pic prompt="一只小猫咪在云端漫步"
+
+  $ adl art submit <workflow_id> --file params.json
+```
+
+_See code: [src/commands/art/submit.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/art/submit.ts)_
 
 ## `adl autocomplete [SHELL]`
 
