@@ -7,6 +7,8 @@ export interface Profile extends NamedProfile {
   documentsPath?: string
   // AutoDL 开发者 Token (控制台 -> 设置 -> 开发者Token)
   autodlToken?: string
+  // AutoDL.art 平台的 ComfyUI API Key
+  comfyuiApiKey?: string
 }
 
 // 顶层配置: 通用多档案结构在 vptool 档案上的特化

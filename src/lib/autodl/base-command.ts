@@ -1,8 +1,6 @@
 // AutoDL 命令基类(模板方法): 统一实现"读取当前配置档案中的 Token -> 构造 API 客户端"流程,
 // 子类只需实现各自的业务逻辑
 
-import * as inquirer from '@inquirer/prompts'
-
 import {BaseCommand} from '../base-command.js'
 import {ToolConfigManager} from '../config/index.js'
 
@@ -21,7 +19,7 @@ export abstract class AutodlCommand extends BaseCommand {
     return new AutodlClient(token)
   }
 
-  // 解析实例ID: 已提供时直接使用, 未提供时拉取实例列表交互式选择
+  // 解析实例ID: 已提供时直接使用, 未提供时拉取实例列表交互式选择, 超时未操作则中断流程
   protected async resolveInstanceUuid(instanceUuid?: string): Promise<string> {
     if (instanceUuid) return instanceUuid
 
@@ -29,24 +27,13 @@ export abstract class AutodlCommand extends BaseCommand {
     const {list} = await client.listInstances(1, 100)
     if (list.length === 0) this.error('当前账号下没有实例, 请先创建实例')
 
-    return inquirer.select({
-      message: '请选择实例',
-      choices: list.map((item) => ({
+    return this.selectWithTimeout(
+      '请选择实例',
+      list.map((item) => ({
         name: `${item.name} (${item.uuid}) [${item.status}]`,
         value: item.uuid,
       })),
-    })
-  }
-
-  // 轮询等待异步操作生效: 每隔 intervalMs 执行一次 check, 返回 true 即代表成功; 超过 timeoutMs 仍未成功返回 false
-  protected async pollUntil(check: () => Promise<boolean>, intervalMs: number, timeoutMs: number): Promise<boolean> {
-    const deadline = Date.now() + timeoutMs
-    while (Date.now() < deadline) {
-      await new Promise<void>((resolveSleep) => {
-        setTimeout(resolveSleep, intervalMs)
-      })
-      if (await check()) return true
-    }
-    return false
+      '可通过参数显式指定实例ID',
+    )
   }
 }

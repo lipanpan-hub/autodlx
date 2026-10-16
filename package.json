@@ -21,7 +21,6 @@
     "pino-mongodb": "^5.0.0",
     "pino-pretty": "^13.2.0",
     "pino-roll": "^4.0.0",
-    "prompts": "^2.4.2",
     "yaml": "^2.9.1"
   },
   "devDependencies": {
@@ -82,6 +81,9 @@
       },
       "image": {
         "description": "AutoDL 私有镜像管理 (查看私有镜像列表等)"
+      },
+      "art": {
+        "description": "AutoDL.art ComfyUI API (提交工作流任务/查询进度/下载产物)"
       },
       "config": {
         "description": "CLI 配置档案管理 (查看/切换/编辑配置文件)"
