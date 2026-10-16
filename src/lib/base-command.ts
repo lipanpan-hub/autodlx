@@ -41,9 +41,9 @@ export abstract class BaseCommand extends Command {
     return this.promptWithTimeout(BaseCommand.SELECT_TIMEOUT_SECONDS, timeoutHint, (signal) => inquirer.select({message, choices}, {signal}))
   }
 
-  // 带超时看门狗的交互式文本输入: 超时未输入则中断并报错退出
-  protected async inputWithTimeout(message: string, timeoutHint: string): Promise<string> {
-    return this.promptWithTimeout(BaseCommand.INPUT_TIMEOUT_SECONDS, timeoutHint, (signal) => inquirer.input({message}, {signal}))
+  // 带超时看门狗的交互式文本输入: 超时未输入则中断并报错退出; defaultValue 直接回车时采用
+  protected async inputWithTimeout(message: string, timeoutHint: string, defaultValue?: string): Promise<string> {
+    return this.promptWithTimeout(BaseCommand.INPUT_TIMEOUT_SECONDS, timeoutHint, (signal) => inquirer.input({message, default: defaultValue}, {signal}))
   }
 
   protected async catch(error: Error & {exitCode?: number}): Promise<unknown> {

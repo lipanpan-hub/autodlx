@@ -69,14 +69,15 @@ export abstract class ArtCommand extends BaseCommand {
     return workflowParams
   }
 
-  // 交互填写单个参数: 返回 undefined 代表可选参数被跳过; 值统一经 parseScalarValue 解析(数字/布尔/文本)
+  // 交互填写单个参数: example 作为默认值(直接回车即采用); 返回 undefined 代表可选参数被跳过; 值统一经 parseScalarValue 解析(数字/布尔/文本)
   private async fillSingleWorkflowParam(param: PresetWorkflowParam): Promise<unknown> {
     const requirementMark = param.isRequired ? '[必填]' : '[可选, 回车跳过]'
-    const exampleText = param.example ? `, 示例: ${param.example}` : ''
+    const defaultText = param.example ? `, 默认: ${param.example}` : ''
     for (;;) {
       const rawValue = await this.inputWithTimeout(
-        `${requirementMark} ${param.name} - ${param.description}${exampleText}:`,
+        `${requirementMark} ${param.name} - ${param.description}${defaultText}:`,
         '可通过 key=value 参数显式指定工作流参数',
+        param.example,
       )
       const trimmedValue = rawValue.trim()
       if (trimmedValue) return parseScalarValue(trimmedValue)
