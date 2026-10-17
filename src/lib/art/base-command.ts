@@ -9,7 +9,11 @@ import {ToolConfigManager} from '../config/index.js'
 import {ArtClient} from './client.js'
 import {resolveSavePaths} from './download.js'
 import {parseScalarValue} from './params.js'
+import type {ComfyuiTaskSnapshot} from './types.js'
 import {PRESET_WORKFLOWS, type PresetWorkflow, type PresetWorkflowParam} from './workflows.js'
+
+// 任务状态轮询间隔
+const TASK_POLL_INTERVAL_MS = 3000
 
 export abstract class ArtCommand extends BaseCommand {
   // 从当前激活档案读取 ComfyUI API Key 并构造客户端, 未配置时直接报错并给出指引
@@ -94,5 +98,26 @@ export abstract class ArtCommand extends BaseCommand {
       await client.downloadFile(resourceUrl, savePath)
       this.log(`已下载: ${savePath}`)
     }
+  }
+
+  // 轮询任务状态直至 SUCCESS, FAILED 时报错退出, 超时则提示改用 status 命令续查;
+  // isQuiet 为 true 时静默轮询(不打中间状态日志), 供批量任务并发等待时避免日志刷屏
+  protected async waitForTaskSuccess(client: ArtClient, taskId: string, timeoutSeconds: number, isQuiet = false): Promise<ComfyuiTaskSnapshot> {
+    let latestSnapshot: ComfyuiTaskSnapshot | undefined
+    const isSucceeded = await this.pollUntil(async () => {
+      latestSnapshot = await client.getTaskSnapshot(taskId)
+      if (latestSnapshot.status === 'FAILED') {
+        this.error(`任务执行失败: ${taskId}\n${JSON.stringify(latestSnapshot, null, 2)}`)
+      }
+      if (!isQuiet && latestSnapshot.status !== 'SUCCESS') {
+        this.log(`当前状态: ${latestSnapshot.status}, 已耗时 ${latestSnapshot.duration ?? 0} 秒, 继续等待...`)
+      }
+      return (latestSnapshot.status === 'SUCCESS')
+    }, TASK_POLL_INTERVAL_MS, timeoutSeconds * 1000)
+
+    if (!isSucceeded || !latestSnapshot) {
+      this.error(`等待任务结果超时 (${timeoutSeconds} 秒), 任务ID: ${taskId}, 可稍后用 adl art status ${taskId} 续查`)
+    }
+    return latestSnapshot
   }
 }
