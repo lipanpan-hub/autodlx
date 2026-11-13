@@ -1,7 +1,7 @@
 {
   "name": "@lppx/autodlx",
   "description": "A developer-friendly multi-command CLI tool",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "author": "lppx",
   "bin": {
     "adl": "./bin/run.js"

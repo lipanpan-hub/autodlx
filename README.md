@@ -128,7 +128,7 @@ $ npm install -g @lppx/autodlx
 $ adl COMMAND
 running command...
 $ adl (--version)
-@lppx/autodlx/0.0.0 win32-x64 node-v24.14.1
+@lppx/autodlx/1.0.0 win32-x64 node-v24.22.2
 $ adl --help [COMMAND]
 USAGE
   $ adl COMMAND
@@ -155,6 +155,7 @@ USAGE
 * [`adl art run [INPUTS]`](#adl-art-run-inputs)
 * [`adl art status TASKID`](#adl-art-status-taskid)
 * [`adl art submit [INPUTS]`](#adl-art-submit-inputs)
+* [`adl art tts [INPUTS]`](#adl-art-tts-inputs)
 * [`adl autocomplete [SHELL]`](#adl-autocomplete-shell)
 * [`adl bal`](#adl-bal)
 * [`adl balance`](#adl-balance)
@@ -231,7 +232,7 @@ EXAMPLES
   $ adl app create # 缺少必填参数时交互式选择算力规格并输入应用UUID
 ```
 
-_See code: [src/commands/app/create.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/create.ts)_
+_See code: [src/commands/app/create.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/app/create.ts)_
 
 ## `adl app down [INSTANCEUUID]`
 
@@ -299,7 +300,7 @@ EXAMPLES
   $ adl app list --page 1 --size 20
 ```
 
-_See code: [src/commands/app/list.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/list.ts)_
+_See code: [src/commands/app/list.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/app/list.ts)_
 
 ## `adl app ls`
 
@@ -383,7 +384,7 @@ EXAMPLES
   $ adl app release pro-76419909953e --force
 ```
 
-_See code: [src/commands/app/release.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/release.ts)_
+_See code: [src/commands/app/release.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/app/release.ts)_
 
 ## `adl app rm [INSTANCEUUID]`
 
@@ -434,7 +435,7 @@ EXAMPLES
   $ adl app show
 ```
 
-_See code: [src/commands/app/show.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/show.ts)_
+_See code: [src/commands/app/show.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/app/show.ts)_
 
 ## `adl app st [INSTANCEUUID]`
 
@@ -485,7 +486,7 @@ EXAMPLES
   $ adl app start pro-76419909953e --command "sleep 1"
 ```
 
-_See code: [src/commands/app/start.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/start.ts)_
+_See code: [src/commands/app/start.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/app/start.ts)_
 
 ## `adl app status [INSTANCEUUID]`
 
@@ -510,7 +511,7 @@ EXAMPLES
   $ adl app status
 ```
 
-_See code: [src/commands/app/status.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/status.ts)_
+_See code: [src/commands/app/status.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/app/status.ts)_
 
 ## `adl app stop [INSTANCEUUID]`
 
@@ -533,7 +534,7 @@ EXAMPLES
   $ adl app stop pro-76419909953e
 ```
 
-_See code: [src/commands/app/stop.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/app/stop.ts)_
+_See code: [src/commands/app/stop.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/app/stop.ts)_
 
 ## `adl app up INSTANCEUUID`
 
@@ -581,7 +582,7 @@ EXAMPLES
   $ adl art cfset
 ```
 
-_See code: [src/commands/art/cfset.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/art/cfset.ts)_
+_See code: [src/commands/art/cfset.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/art/cfset.ts)_
 
 ## `adl art download TASKID`
 
@@ -606,7 +607,7 @@ EXAMPLES
   $ adl art download <task_id> --out ./outputs
 ```
 
-_See code: [src/commands/art/download.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/art/download.ts)_
+_See code: [src/commands/art/download.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/art/download.ts)_
 
 ## `adl art run [INPUTS]`
 
@@ -635,7 +636,7 @@ EXAMPLES
   $ adl art run --file params.json --out ./outputs
 ```
 
-_See code: [src/commands/art/run.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/art/run.ts)_
+_See code: [src/commands/art/run.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/art/run.ts)_
 
 ## `adl art status TASKID`
 
@@ -655,7 +656,7 @@ EXAMPLES
   $ adl art status 2a25da1d-39ad-495c-8dac-bae8e8f6b1a1
 ```
 
-_See code: [src/commands/art/status.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/art/status.ts)_
+_See code: [src/commands/art/status.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/art/status.ts)_
 
 ## `adl art submit [INPUTS]`
 
@@ -680,7 +681,38 @@ EXAMPLES
   $ adl art submit <workflow_id> --file params.json
 ```
 
-_See code: [src/commands/art/submit.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/art/submit.ts)_
+_See code: [src/commands/art/submit.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/art/submit.ts)_
+
+## `adl art tts [INPUTS]`
+
+批量调用 indextts2 工作流为 VTT 字幕生成配音 (全部并发提交, 统一等待完成后下载到输出目录)
+
+```
+USAGE
+  $ adl art tts [INPUTS...] [-r <value>] [-o <value>] [--emo <value>] [--timeout <value>]
+
+ARGUMENTS
+  [INPUTS...]  VTT 字幕文件路径 与 key=value 参数 (首个不含 = 的 token 为字幕文件路径, 省略时交互输入)
+
+FLAGS
+  -o, --out=<value>      [default: ./tts-output] 配音输出目录
+  -r, --ref=<value>      [default: http://lipanpan.oss-cn-shenzhen.aliyuncs.com/voice-preview.wav] 参考音频: URL
+                         或本地文件路径 (整批共用同一音色)
+      --emo=<value>      [default: 与音色参考音频相同] 情绪控制方法 (emo_control_method)
+      --timeout=<value>  [default: 600] 等待全部任务完成的超时秒数
+
+DESCRIPTION
+  批量调用 indextts2 工作流为 VTT 字幕生成配音 (全部并发提交, 统一等待完成后下载到输出目录)
+
+EXAMPLES
+  $ adl art tts ./subtitle.vtt --ref https://example.com/voice.wav
+
+  $ adl art tts ./subtitle.vtt --ref ./voice.wav -o ./tts-output
+
+  $ adl art tts ./subtitle.vtt --ref ./voice.wav emo_happy=0.8
+```
+
+_See code: [src/commands/art/tts.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/art/tts.ts)_
 
 ## `adl autocomplete [SHELL]`
 
@@ -749,7 +781,7 @@ EXAMPLES
   $ adl balance
 ```
 
-_See code: [src/commands/balance.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/balance.ts)_
+_See code: [src/commands/balance.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/balance.ts)_
 
 ## `adl cf edit`
 
@@ -906,7 +938,7 @@ EXAMPLES
   $ adl config edit --editor
 ```
 
-_See code: [src/commands/config/edit.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/config/edit.ts)_
+_See code: [src/commands/config/edit.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/config/edit.ts)_
 
 ## `adl config show`
 
@@ -927,7 +959,7 @@ EXAMPLES
   $ adl config show
 ```
 
-_See code: [src/commands/config/show.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/config/show.ts)_
+_See code: [src/commands/config/show.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/config/show.ts)_
 
 ## `adl config switch [NAME]`
 
@@ -953,7 +985,7 @@ EXAMPLES
   $ adl config switch
 ```
 
-_See code: [src/commands/config/switch.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/config/switch.ts)_
+_See code: [src/commands/config/switch.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/config/switch.ts)_
 
 ## `adl down [INSTANCEUUID]`
 
@@ -1020,7 +1052,7 @@ EXAMPLES
   $ adl image list --page 1 --size 20
 ```
 
-_See code: [src/commands/image/list.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/image/list.ts)_
+_See code: [src/commands/image/list.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/image/list.ts)_
 
 ## `adl images`
 
@@ -1332,7 +1364,7 @@ EXAMPLES
   $ adl instance create # 缺少必填参数时交互式选择算力规格与镜像
 ```
 
-_See code: [src/commands/instance/create.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/instance/create.ts)_
+_See code: [src/commands/instance/create.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/instance/create.ts)_
 
 ## `adl instance list`
 
@@ -1357,7 +1389,7 @@ EXAMPLES
   $ adl instance list --page 1 --size 20
 ```
 
-_See code: [src/commands/instance/list.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/instance/list.ts)_
+_See code: [src/commands/instance/list.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/instance/list.ts)_
 
 ## `adl instance release [INSTANCEUUID]`
 
@@ -1386,7 +1418,7 @@ EXAMPLES
   $ adl instance release pro-76419909953e --force
 ```
 
-_See code: [src/commands/instance/release.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/instance/release.ts)_
+_See code: [src/commands/instance/release.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/instance/release.ts)_
 
 ## `adl instance save-image INSTANCEUUID IMAGENAME`
 
@@ -1411,7 +1443,7 @@ EXAMPLES
   $ adl instance save-image pro-76419909953e my-image
 ```
 
-_See code: [src/commands/instance/save-image.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/instance/save-image.ts)_
+_See code: [src/commands/instance/save-image.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/instance/save-image.ts)_
 
 ## `adl instance show [INSTANCEUUID]`
 
@@ -1437,7 +1469,7 @@ EXAMPLES
   $ adl instance show
 ```
 
-_See code: [src/commands/instance/show.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/instance/show.ts)_
+_See code: [src/commands/instance/show.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/instance/show.ts)_
 
 ## `adl instance start INSTANCEUUID`
 
@@ -1466,7 +1498,7 @@ EXAMPLES
   $ adl instance start pro-76419909953e --command "python train.py"
 ```
 
-_See code: [src/commands/instance/start.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/instance/start.ts)_
+_See code: [src/commands/instance/start.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/instance/start.ts)_
 
 ## `adl instance status [INSTANCEUUID]`
 
@@ -1492,7 +1524,7 @@ EXAMPLES
   $ adl instance status
 ```
 
-_See code: [src/commands/instance/status.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/instance/status.ts)_
+_See code: [src/commands/instance/status.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/instance/status.ts)_
 
 ## `adl instance stop [INSTANCEUUID]`
 
@@ -1516,7 +1548,7 @@ EXAMPLES
   $ adl instance stop pro-76419909953e
 ```
 
-_See code: [src/commands/instance/stop.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/instance/stop.ts)_
+_See code: [src/commands/instance/stop.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/instance/stop.ts)_
 
 ## `adl login [TOKEN]`
 
@@ -1538,7 +1570,7 @@ EXAMPLES
   $ adl login
 ```
 
-_See code: [src/commands/login.ts](https://github.com/lipanpan-hub/autodlx/blob/v0.0.0/src/commands/login.ts)_
+_See code: [src/commands/login.ts](https://github.com/lipanpan-hub/autodlx/blob/v1.0.0/src/commands/login.ts)_
 
 ## `adl new`
 
